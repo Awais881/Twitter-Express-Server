@@ -62,7 +62,7 @@ function ForgetPassword() {
           }
 
 
-        e.reset();
+        // e.reset();
     }
     const ForgetPass = async (e) => {
       e.preventDefault();
@@ -104,7 +104,7 @@ function ForgetPassword() {
         }
 
 
-      e.reset();
+      // e.reset();
   }
 
 
