@@ -8,7 +8,7 @@ import jwt from 'jsonwebtoken';
 import AuthApis from './apis/auth.mjs'
 import TweetApis from './apis/tweet.mjs'
 import { stringToHash, varifyHash } from 'bcrypt-inzi';
-import { userModel } from './dbRepo/models.mjs';
+import { userModel , otpModel} from './dbRepo/models.mjs';
 const port = process.env.PORT || 5001;
 
 mongoose.set('strictQuery', true);

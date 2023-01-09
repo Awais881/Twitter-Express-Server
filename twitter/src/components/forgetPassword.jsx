@@ -62,8 +62,50 @@ function ForgetPassword() {
           }
 
 
-        // e.reset();
+        e.reset();
     }
+    const ForgetPass = async (e) => {
+      e.preventDefault();
+
+      try {
+          let response = await axios.post(`${state.baseUrl}/api/v1/check-otp`, {
+              email: email,
+              otp: otp,
+              newPassword: newPassword
+
+          }, {
+              withCredentials: true
+          })
+          toast.success('Changed Sucessfully', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          })
+          console.log(response.data.message);
+         setIsOtpSent(true)
+
+      } catch (e) {
+          console.log("e: ", e); 
+          toast.error('Changed error', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          })
+        }
+
+
+      e.reset();
+  }
 
 
     return (
@@ -88,27 +130,28 @@ function ForgetPassword() {
             id='formControlLg' type='email' size="lg"
             onChange={(e) => { setEmail(e.target.value) }}
             />
-           {(isOtpSent) ? <>
           
-
-              < br />
-            <MDBInput wrapperClass='mb-4 mx-5 w-100' label='enter otp'
-id='formControlLg' type='text' size="lg"
-                onChange={(e) => { setOtp(e.target.value) }}
-            /> 
-
-                <br />
-            <MDBInput wrapperClass='mb-4 mx-5 w-100' label='Password'
-            id='formControlLg' type='password' size="lg"
-        onChange={(e) => { setNewPassword(e.target.value) }}
-        /> 
-            
-        </>
-        : null}
 
             <MDBBtn className="mb-4 px-5 mx-5 w-100" color='info' size='lg'  type="submit">Send Otp</MDBBtn>
             </form>
-           
+            {(isOtpSent) ? <>
+          
+        <form onSubmit={ForgetPass}>
+          < br />
+        <MDBInput wrapperClass='mb-4 mx-5 w-100' label='enter otp'
+     id='formControlLg' type='text' size="lg"
+            onChange={(e) => { setOtp(e.target.value) }}
+        /> 
+
+            <br />
+        <MDBInput wrapperClass='mb-4 mx-5 w-100' label='Password'
+        id='formControlLg' type='password' size="lg"
+    onChange={(e) => { setNewPassword(e.target.value) }}
+    /> 
+        <MDBBtn className="mb-4 px-5 mx-5 w-100" color='info' size='lg'  type="submit">Submit</MDBBtn>
+       </form> 
+    </>
+    : null}
             <p className='ms-5'>Don't have an account? <Link to={`/signup`}>Register here</Link></p>
 
           </div>

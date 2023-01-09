@@ -31,7 +31,7 @@ const otpSchema = new mongoose.Schema({
     email: String,
     createdOn: { type: Date, default: Date.now },
 });
-export const otpModel = mongoose.model('Opts', otpSchema);
+export const otpModel = mongoose.model('Otps', otpSchema);
 
 
 

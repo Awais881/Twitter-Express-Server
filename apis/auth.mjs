@@ -238,12 +238,12 @@ router.post("/api/v1/logout", (req, res) =>{
 
 
 })
-router.post('/api/v1/forget-password-2', async (req, res) => {
+router.post('/api/v1/check-otp', async (req, res) => {
     try {
 
         let body = req.body;
         body.email = body.email.toLowerCase();
-
+       
         if (!body.email || !body.otp || !body.newPassword) { // null check - undefined, "", 0 , false, null , NaN
             res.status(400).send(
                 `required fields missing, request example: 
