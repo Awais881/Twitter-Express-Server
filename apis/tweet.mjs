@@ -98,8 +98,9 @@ router.get("/api/v1/tweets", (req, res) => {
           res.status(500).send({
             message: "Get tweets  error",
            
+           
           });  
-         
+          console.log(err)
         }
   
       });

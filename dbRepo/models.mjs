@@ -24,7 +24,7 @@ let userSchema= new mongoose.Schema({
     password :  { type: String, required: true },
 })
 
-export const userModel= mongoose.model("user", userSchema);
+export const userModel= mongoose.model("Users", userSchema);
 
 const otpSchema = new mongoose.Schema({
     otp: String,

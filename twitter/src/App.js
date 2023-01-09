@@ -102,7 +102,8 @@ function App() {
         (state.isLogin === true) ?
           <ul className='navBar'>
             <li> <Link to={`/`}> </Link> </li>
-           
+            <li> <Link to={`/change-password"`}> </Link> </li> 
+            <li> <Link to={`/profile`}> </Link> </li>
             
            
             {/* <li> <Button size="medium"  variant="contained"  onClick={logoutHandler}>Logout</Button> </li>  */}

@@ -255,7 +255,7 @@ function Profile() {
       <AppBar position="sticky">
         <StyledToolbar>
           <Typography variant="h6" sx={{ display: { xs: "none ", sm: "block" } }} className="logo">
-            E-Commerce
+          Tweets
           </Typography>
           <HomeIcon sx={{ display: { xs: "block ", sm: "none" } }} className="logo" />
           <Search><InputBase placeholder='Search' sx={{ width: "100%" }} /></Search>
@@ -308,7 +308,168 @@ function Profile() {
                 
                </div>
 
-      
+               <Box bgcolor={'whitesmoke'} flex={4} p={2}>
+          <Box>
+            <Box sx={{
+              display: "flex",
+              justifyContent: "center",
+              mt: "10px"
+            }}>
+              <Box flex={1} height={280} bgcolor={"background.default"} color={"text.primary"}
+                p={3} border="1px solid black"
+                pb={5}
+                // sx={{ border: { xs: "none", sm: "block", md: "block" } }}
+                borderRadius={5}>
+                <Typography variant='h6' color='gray' textAlign='center'>Tweet</Typography>
+                <UserBox1>
+                  <Avatar sx={{ width: 40, height: 40 }}
+                    src="https://avatars.githubusercontent.com/u/102538169?v=4" />
+                  <Typography fontWeight={500} variant="span">Awais Ahmed</Typography>
+                </UserBox1>
+                <div className='form'>
+                  <form onSubmit={saveTweet} sx={{ width: "100%" }} >
+                    <TextField
+                      sx={{ width: "100%" }}
+                      id="standard-multiline-static"
+                      onChange={(e) => { setTweetsText(e.target.value) }}
+                      multiline
+                      rows={1}
+              
+                      label="whats in your mind"
+                      variant="filled" />
+                
+                    <Stack direction='row' gap={1} mt={2} mb={3}>
+                      <EmojiEmotions color='primary' />
+                      <Image color='secondary' />
+                      <VideoCameraBack color='success' />
+                      <PersonAdd color='error' />
+                    </Stack>
+                    <ButtonGroup fullWidth
+                      variant='contained'
+                      aria-label='outlined primary button group'>
+
+                      <Button type='submit' >Tweet</Button>
+
+
+                    </ButtonGroup>
+                  </form>
+                </div>
+              </Box>
+            </Box>
+          </Box>
+
+
+
+
+
+          <Box flex={2} mt="20px">
+            {tweets?.map((eachTweet, i) => (
+
+              <Card key={i} sx={{ margin: 5 }}>
+                <CardHeader
+                  avatar={
+                    <Avatar sx={{ bgcolor: "red" }} aria-label="recipe">
+                     
+
+                    </Avatar>
+                  }
+                  action={
+                    <IconButton aria-label="settings">
+                      <MoreVert />
+                    </IconButton>
+                  }
+                  title= {state?.user?.firstName}
+                  subheader={moment(eachTweet.createdOn).fromNow()}
+                />
+                <CardMedia
+                  component="img"
+                  height="20%"
+                  image="https://images.pexels.com/photos/4534200/pexels-photo-4534200.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                  alt="Paella dish"
+                />
+                <CardContent>
+                  <Typography variant="body2" color="text.secondary">
+                  {eachTweet?.text}
+                  </Typography> <br />
+                 
+                </CardContent>
+                <CardActions disableSpacing>
+                  <IconButton aria-label="add to favorites">
+                    <Checkbox
+                      icon={<FavoriteBorder />}
+                      checkedIcon={<Favorite sx={{ color: "red" }} />}
+                    />
+                  </IconButton>
+                  <IconButton aria-label="share">
+                    <Share />
+                  </IconButton>
+                </CardActions>
+                <div className="editbtn">
+                  <Button className="edit"
+                    variant="outlined" color="success" onClick={() => {
+                        setEditingTweet({
+                        editingId: eachTweet?._id,
+                        editingText: eachTweet?.tweetsText,
+                       
+                      })
+                    }}>
+                    Edit</Button> &nbsp; &nbsp;
+
+                
+                  <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => {
+                    setDeleter(eachTweet?._id)
+                    deleted();
+                  }}>
+                    Delete
+                  </Button>
+                </div>
+
+
+                 {
+                  (eachTweet._id === editingTweet.editingId) ?
+                    (<div>
+
+                      <h1>update form</h1>
+                      <div className='UpdateForm'>
+                        <form onSubmit={updateHandler}>
+
+                          <TextField
+                            sx={{ width: "100%" }}
+                            id="standard-multiline-static"
+                            onChange={(e) => { setEditingTweet({ ...editingTweet, editingText: e.target.value }) }}
+                            value={editingTweet.editingText}
+                            multiline
+                            rows={1}
+                            label="Update Text"
+                            variant="filled" />
+
+                         
+
+
+                          <br />
+
+                          <Button variant="contained" color="success" type='submit'>
+                            Proced Update
+                          </Button>
+                        </form>
+                      </div>
+                    </div>) : null
+                } 
+              </Card>
+            ))}
+          </Box>
+        </Box>
+
+
+
+
+     
+
+
+
+
+        <ToastContainer />
+  
 
        
 
@@ -321,7 +482,7 @@ function Profile() {
 
 
 
-        <ToastContainer />
+     
      
     </>
   );
