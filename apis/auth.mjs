@@ -5,6 +5,7 @@ import {
     varifyHash,
 } from "bcrypt-inzi"
 import jwt from 'jsonwebtoken';
+// import SendEmail from "./sendingMails/sendMails.mjs";
 import { nanoid, customAlphabet } from 'nanoid'
 const SECRET = process.env.SECRET || "topsecret";
 
@@ -205,39 +206,30 @@ router.post("/api/v1/logout", (req, res) =>{
         }
 
         // check if user exist
-        const user = await userModel.findOne(
-            { email: body.email },
-            "firstName lastName email",
-        ).exec()
-
-        if (!user) throw new Error("User not found")
-
-        const nanoid = customAlphabet('1234567890', 5)
-        const OTP = nanoid();
-
-        console.log("OTP: ", OTP)
-        otpModel.create({
-            otp: OTP,
-            email: body.email,
-        });
-
-        // TODO: send otp via email // postMark
-
-        res.send({
-            message: "OTP sent success",
-        });
-        return;
-
+        const user = await userModel
+        .findOne({ email: body.email }, "firstName email password")
+        .exec();
+      if (!user) throw new Error("User not found");
+      const nanoid = customAlphabet("1234567890", 5);
+      const OTP = nanoid();
+      console.log(OTP);
+  
+    //   await SendEmail({
+    //     email: body.email,
+    //     subject: `Froget paswword Email`,
+    //     text: `Your OTP code is here \n\n ${OTP} \n\n Please Don't Share this code`,
+    //   });
+      const hashOTP = await stringToHash(OTP);
+      otpModel.create({ otp: hashOTP, email: body.email });
+      res.send({
+        message: "OTP sent check email",
+      });
+      return;
     } catch (error) {
-        console.log("error: ", error);
-        res.status(500).send({
-            message: error.message
-        })
+      // console.log(error);
+      res.status(500).send({ message: error });
     }
-
-
-
-})
+  });
 router.post('/api/v1/check-otp', async (req, res) => {
     try {
 
@@ -264,6 +256,7 @@ router.post('/api/v1/check-otp', async (req, res) => {
             .sort({ _id: -1 })
             .exec()
 
+            console.log("otpRecord:" ,otpRecord)
         if (!otpRecord) throw new Error("Otp not found")
 
         const isMatched = await varifyHash(body.otp, otpRecord.otp)
