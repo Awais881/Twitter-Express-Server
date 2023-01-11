@@ -102,9 +102,7 @@ function App() {
         (state.isLogin === true) ?
           <ul className='navBar'>
             <li> <Link to={`/`}> </Link> </li>
-            <li> <Link to={`/change-password"`}> </Link> </li> 
             <li> <Link to={`/profile`}> </Link> </li>
-            
            
             {/* <li> <Button size="medium"  variant="contained"  onClick={logoutHandler}>Logout</Button> </li>  */}
             
@@ -114,8 +112,9 @@ function App() {
       {
         (state.isLogin === false) ?
           <ul className='navBar'>
-            <li> <Link to={`/`}> </Link> </li>
-            <li> <Link to={`/signup`}></Link> </li>
+            <li> <Link to={"/"}> </Link> </li>
+            <li> <Link to={"/signup"}></Link> </li>
+         
           </ul> : null
       }
 
@@ -123,10 +122,9 @@ function App() {
 
         <Routes>
           <Route path="/" element={<Home />} />
-           <Route path="profile" element={<Profile />} />
-         <Route path="change-password" element={<ChangePassword />} />
-       {/*   <Route path="gallery" element={<Gallery />} /> */}
-          <Route path="*" element={<Navigate to="/" replace={true} />} />
+           <Route path='profile' element={<Profile />} />
+         <Route path='change-password' element={<ChangePassword />} />
+         <Route path="*" element={<Navigate to="/" replace={true} />} />
         </Routes>
         : null}
 

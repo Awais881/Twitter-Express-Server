@@ -26,44 +26,44 @@ function ForgetPassword() {
 
 
     const sendOtp = async (e) => {
-        e.preventDefault();
+      e.preventDefault();
 
-        try {
-            let response = await axios.post(`${state.baseUrl}/api/v1/forget-password`, {
-                email: email,
-            }, {
-                withCredentials: true
-            })
-            toast.success('sent otp Sucessfully', {
-              position: "top-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            })
-            console.log(response.data.message);
-           setIsOtpSent(true)
+      try {
+          let response = await axios.post(`${state.baseUrl}/api/v1/forget-password`, {
+              email: email,
+          }, {
+              withCredentials: true
+          })
+          toast.success('sent otp Sucessfully', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          })
+          console.log(response.data.message);
+         setIsOtpSent(true)
 
-        } catch (e) {
-            console.log("e: ", e); 
-            toast.error('Send Otp  error', {
-              position: "top-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            })
-          }
+      } catch (e) {
+          console.log("e: ", e); 
+          toast.error('Send Otp  error', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          })
+        }
 
 
-        // e.reset();
-    }
+      // e.reset();
+  }
     const ForgetPass = async (e) => {
       e.preventDefault();
 

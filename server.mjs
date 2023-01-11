@@ -112,46 +112,46 @@ app.get('/api/v1/profile/:id', getUser)
 
 app.post("/api/v1/change-password" , async (req, res) =>{
 
-   try {
-    const body= req.body
-     const currentPassword= body.currentPassword
-     const newPassword = body.password;
-        const _id = req.body.token._id
-console.log(currentPassword)
-console.log(newPassword)
- // check if user exist 
-     const user = await userModel.findOne(
-        {_id: _id}, "password").exec()
-
-
-     if (!user) throw new Error("User not found")
+    try {
+        const body= req.body
+         const currentPassword= body.currentPassword
+         const newPassword = body.password;
+            const _id = req.body.token._id
+    console.log(currentPassword)
+    console.log(newPassword)
+     // check if user exist 
+         const user = await userModel.findOne(
+            {_id: _id}, "password").exec()
     
-
-     const isMatched = await varifyHash(currentPassword , user.password)
-
-     if (!isMatched) throw new Error("password mismatch")
-
- 
-
-     const newHash = await stringToHash(newPassword);
     
-     await userModel.updateOne( {_id: _id}, { password: newHash}).exec()
-
-    //  Success
-
-     res.send({message : " Password Chnaged succesfully"})
-     return
-   } catch (error) {
-    console.log("error: ", error);
-    res.status(500).send()
-
+         if (!user) throw new Error("User not found")
+        
     
-   }
-
-
-}
-
-)
+         const isMatched = await varifyHash(currentPassword , user.password)
+    
+         if (!isMatched) throw new Error("password mismatch")
+    
+     
+    
+         const newHash = await stringToHash(newPassword);
+        
+         await userModel.updateOne( {_id: _id}, { password: newHash}).exec()
+    
+        //  Success
+    
+         res.send({message : " Password Chnaged succesfully"})
+         return
+       } catch (error) {
+        console.log("error: ", error);
+        res.status(500).send()
+    
+        
+       }
+    
+    
+    }
+    
+    )
 
 const __dirname = path.resolve();
 app.use('/', express.static(path.join(__dirname, './twitter/build')))
