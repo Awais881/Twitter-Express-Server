@@ -11,7 +11,7 @@ const SECRET = process.env.SECRET || "topsecret";
 import SendEmail  from './sendingMails/sendMails.mjs'
 
 const router = express.Router()
-
+import moment from "moment/moment.js";
 import * as dotenv from 'dotenv'
 dotenv.config()
 
@@ -256,7 +256,7 @@ router.post('/api/v1/check-otp', async (req, res) => {
            
             return;
         }
-
+     console.log(body.otp)
         // check if otp exist
         const otpRecord = await otpModel.findOne(
             { email: body.email }
@@ -265,20 +265,28 @@ router.post('/api/v1/check-otp', async (req, res) => {
             .exec()
 
             console.log("otpRecord:" ,otpRecord)
-        if (!otpRecord) throw new Error("Otp not found")
-
-        const isMatched = await varifyHash(body.otp, otpRecord.otp)
-        if (!isMatched) throw new Error("Invalid OTP")
+            if (!otpRecord) throw new Error("Invalid OTP");
+            if (otpRecord.isUsed) throw new Error("Invalid OTP");
+            await otpModel.updateOne({ isUsed: true }).exec();
         
-        const newHash = await stringToHash(body.newPassword);
-
-        await userModel.updateOne({ email: body.email }, { password: newHash }).exec()
-
-        // success
-        res.send({
-            message: "password updated success",
-        });
-        return;
+            // is se otp 5 minutes bad use nahi hoge
+            const now = moment();
+            const otpCreatedTime = moment(otpRecord.createdOn);
+            const differenceInMin = now.diff(otpCreatedTime, "minutes");
+        
+            if (differenceInMin >= 5) throw new Error("Invalid OTP");
+        
+            const isMatched = await varifyHash(body.otp, otpRecord.otp);
+            if (!isMatched) throw new Error("Invalid OTP ");
+        
+            const newhashPassword = await stringToHash(body.new_password);
+            await userModel
+              .updateOne({ email: body.email }, { password: newhashPassword })
+              .exec();
+            res.send({
+              message: "password changed success",
+            });
+            return;
 
     } catch (error) {
         console.log("error: ", error);
