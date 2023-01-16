@@ -8,11 +8,12 @@ import jwt from 'jsonwebtoken';
 // import SendEmail from "./sendingMails/sendMails.mjs";
 import { nanoid, customAlphabet } from 'nanoid'
 const SECRET = process.env.SECRET || "topsecret";
-
+import SendEmail  from './sendingMails/sendMails.mjs'
 
 const router = express.Router()
 
-
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 
 router.post("/api/v1/signup", (req ,res) =>{
@@ -190,6 +191,8 @@ router.post("/api/v1/logout", (req, res) =>{
 
 
    router.post('/api/v1/forget-password', async (req, res) => {
+
+
     try {
 
         let body = req.body;
@@ -212,13 +215,13 @@ router.post("/api/v1/logout", (req, res) =>{
       if (!user) throw new Error("User not found");
       const nanoid = customAlphabet("1234567890", 5);
       const OTP = nanoid();
-      console.log(OTP);
+    //   console.log(OTP);
   
-    //   await SendEmail({
-    //     email: body.email,
-    //     subject: `Froget paswword Email`,
-    //     text: `Your OTP code is here \n\n ${OTP} \n\n Please Don't Share this code`,
-    //   });
+      await SendEmail ({
+        email: body.email,
+        subject: `Froget password Email`,
+        text: `Your  forget password OTP code  ${OTP} Please Don't Share this code`,
+      });
       const hashOTP = await stringToHash(OTP);
       otpModel.create({ otp: hashOTP, email: body.email });
       res.send({
@@ -226,10 +229,15 @@ router.post("/api/v1/logout", (req, res) =>{
       });
       return;
     } catch (error) {
-      // console.log(error);
-      res.status(500).send({ message: error });
+      console.log(error);
+      res.status(500).send({ message: error });                      
     }
   });
+
+
+
+
+
 router.post('/api/v1/check-otp', async (req, res) => {
     try {
 

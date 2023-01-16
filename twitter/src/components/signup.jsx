@@ -17,7 +17,7 @@ import { GlobalContext } from '../context/context';
 
 
 import './login.css';
-function Login() {
+function Signup() {
 
 
     let { state, dispatch } = useContext(GlobalContext);
@@ -72,7 +72,7 @@ function Login() {
 
 
 
-
+    
 
   return (
     <MDBContainer fluid>
@@ -123,4 +123,4 @@ function Login() {
     </MDBContainer>
   );
 }
-export default Login;
+export default Signup;
