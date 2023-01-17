@@ -149,7 +149,7 @@ function Profile() {
       const response = await axios.put(
         `${state.baseUrl}/api/v1/tweet/${editingTweet.editingId}`,
          {
-
+          text: editingTweet.editingText
 
         });
      
@@ -185,10 +185,10 @@ function Profile() {
     }
   };
 
-  const deleted = () => {
+  const deleted = (postId) => {
     // console.log(postId);
     setToggleReload(!toggleReload);
-    axios.delete(`${state.baseUrl}/api/v1/tweet/:${deleter}`)
+    axios.delete(`${state.baseUrl}/api/v1/tweet/${postId}`)
       .then((response) => {
         console.log(response.data);
         toast.success('Deleted Sucessfully', {
@@ -417,8 +417,7 @@ function Profile() {
 
                 
                   <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => {
-                    setDeleter(eachTweet?._id)
-                    deleted();
+                     deleted(eachTweet?._id)
                   }}>
                     Delete
                   </Button>

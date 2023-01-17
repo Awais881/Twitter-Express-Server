@@ -187,10 +187,10 @@ function Products() {
     }
   };
 
-  const deleted = () => {
+  const deleted = (postId) => {
     // console.log(postId);
     setToggleReload(!toggleReload);
-    axios.delete(`${state.baseUrl}/api/v1/tweet/:${deleter}`)
+    axios.delete(`${state.baseUrl}/api/v1/tweet/${postId}`)
       .then((response) => {
         console.log(response.data);
         toast.success('Deleted Sucessfully', {
@@ -496,8 +496,7 @@ function Products() {
 
                 
                   <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => {
-                    setDeleter(eachTweet?._id)
-                    deleted();
+                    deleted(eachTweet?._id)
                   }}>
                     Delete
                   </Button>
