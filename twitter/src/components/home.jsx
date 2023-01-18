@@ -26,7 +26,7 @@ import {
   MDBBtn, MDBContainer,MDBRow,MDBCol, MDBIcon,MDBInput
 } from 'mdb-react-ui-kit';
 import InfiniteScroll from 'react-infinite-scroller';
-
+import Loader from "../assets/PostLoader.gif"
 
 
 function Tweets() {
@@ -459,7 +459,9 @@ function Tweets() {
                 pageStart={0}
                 loadMore={getAllTweets}
                 hasMore={!eof}
-                loader={<div className="loader" key={0}>Loading ...</div>}
+                loader={<div style={{ display: "flex", justifyContent: "center", alignItems: "baseline", minHeight: '100vh' }}>
+                <img width={780} src={Loader} alt=""  />
+              </div>}
             >
 
           <Box flex={2} mt="20px">
