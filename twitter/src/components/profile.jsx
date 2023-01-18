@@ -26,7 +26,6 @@ import coverImage from './../assets/cover.png'
 import profilePhoto from './../assets/profile.jpg';
 
 
-
 function Profile() {
   let { state, dispatch } = useContext(GlobalContext);
 

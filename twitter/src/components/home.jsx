@@ -25,17 +25,17 @@ import { GlobalContext } from '../context/context';
 import {
   MDBBtn, MDBContainer,MDBRow,MDBCol, MDBIcon,MDBInput
 } from 'mdb-react-ui-kit';
+import InfiniteScroll from 'react-infinite-scroller';
 
 
 
-
-function Products() {
+function Tweets() {
   let { state, dispatch } = useContext(GlobalContext);
 
   const [tweets, setTweets] = useState([]);
   const [tweetsText, setTweetsText] = useState([]);
   
-  const [deleter, setDeleter] = useState("");
+
  
   const [toggleReload, setToggleReload] = useState(false);
   const [editingTweet, setEditingTweet] = useState({
@@ -43,6 +43,10 @@ function Products() {
     editingText: "",
   });
   const [open, setOpen] = useState(false);
+       const [eof, setEof] = useState(false)
+
+
+
   // Get All Products
 
   const logoutHandler = async () => {
@@ -84,15 +88,27 @@ function Products() {
 
 
   const getAllTweets  = () => {
-    axios.get(`${state.baseUrl}/api/v1/tweetFeed`)
+    if (eof)
+    return
+    try{
+    axios.get(`${state.baseUrl}/api/v1/tweetFeed?page=${tweets.length}`)
+
+
+
       .then(response => {
         console.log("All Tweets", response.data.data);
-        setTweets(response.data.data)
+        if( response.data.data ===0) setEof(true)
+        setTweets((prev) => {
+
+          
+          return [...prev, ...response.data.data]
       })
-      .catch(err => {
-        console.log("err", err);
       })
-  };
+    }
+    catch (error) {
+      console.log("error in getting all tweets", error);
+  }
+}
 
 
   useEffect(() => {
@@ -439,7 +455,12 @@ function Products() {
 
 
 
-
+          <InfiniteScroll
+                pageStart={0}
+                loadMore={getAllTweets}
+                hasMore={!eof}
+                loader={<div className="loader" key={0}>Loading ...</div>}
+            >
 
           <Box flex={2} mt="20px">
             {tweets?.map((eachTweet, i) => (
@@ -536,6 +557,7 @@ function Products() {
               </Card>
             ))}
           </Box>
+        </InfiniteScroll>
         </Box>
 
 
@@ -545,11 +567,10 @@ function Products() {
 
 
 
-
         <ToastContainer />
       </Stack>
     </>
   );
 }
 
-export default Products;
+export default Tweets;
