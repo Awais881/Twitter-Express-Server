@@ -8,7 +8,7 @@ let tweetSchema = new mongoose.Schema({
     // ownerName: String,
     // profilePhoto: String,
 
-    image: { type: String },
+    imageUrl: { type: String },
    
     isDeleted: { type: Boolean, default: false },
     createdOn: { type: Date, default: Date.now }

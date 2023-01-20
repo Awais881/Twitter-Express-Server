@@ -24,14 +24,15 @@ import {
 import { GlobalContext } from '../context/context';
 import coverImage from './../assets/cover.png'
 import profilePhoto from './../assets/profile.jpg';
-
+import InfiniteScroll from 'react-infinite-scroller';
+import Loader from "../assets/PostLoader.gif"
 
 function Profile() {
   let { state, dispatch } = useContext(GlobalContext);
 
   const [tweets, setTweets] = useState([]);
   const [tweetsText, setTweetsText] = useState([]);
-  
+  const [eof, setEof] = useState(false)
   const [deleter, setDeleter] = useState("");
  
   const [toggleReload, setToggleReload] = useState(false);
@@ -40,7 +41,8 @@ function Profile() {
     editingText: "",
   });
   const [open, setOpen] = useState(false);
-  // Get All Products
+  const [preview, setPreview] = useState(null)
+  // Get All Tweets
 
   const logoutHandler = async () => {
 
@@ -107,39 +109,46 @@ function Profile() {
 
   const saveTweet = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(`${state.baseUrl}/api/v1/tweet`,
-
-       {
-        text: tweetsText
-      
-      });
-      setToggleReload(!toggleReload)
-      
-      toast.success('Added Sucessfully', {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    } catch (err) {
-      console.log("err", err);
-      toast.error('Failed', {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    }
-  };
+    let fileInput = document.getElementById("picture");
+    console.log("fileInput: ", fileInput.files[0]);
+    let formData = new FormData();
+  formData.append("myFile", fileInput.files[0])
+  formData.append("text", tweetsText)
+  console.log(formData.get("text"));
+  axios({
+    method: 'post',
+    url: `${state.baseUrl}/tweet`,
+    data: formData,
+    headers: { 'Content-Type': 'multipart/form-data' }
+})
+    .then(res => {
+      setToggleReload(!toggleReload);
+        console.log(`upload Success` + res.data);
+        toast.success('Added Sucessfully', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+    })
+    .catch(err => {
+        console.log("error: ", err);
+        toast.error("Can't Tweet", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+    })
+}
 
 
   const updateHandler = async (e) => {
@@ -338,10 +347,22 @@ function Profile() {
                       variant="filled" />
                 
                     <Stack direction='row' gap={1} mt={2} mb={3}>
-                      <EmojiEmotions color='primary' />
-                      <Image color='secondary' />
-                      <VideoCameraBack color='success' />
-                      <PersonAdd color='error' />
+                    <Image color='secondary' />
+                      <input 
+                         id='picture'
+                         type="file"
+                         accept='image/*'
+                         onChange={(e) => {
+                           
+                           var url = URL.createObjectURL(e.currentTarget.files[0])
+                           
+                           console.log("url: ", url);
+                           
+                           setPreview(url)
+                           
+                          }} />
+                  
+                  
                     </Stack>
                     <ButtonGroup fullWidth
                       variant='contained'
@@ -355,9 +376,17 @@ function Profile() {
                 </div>
               </Box>
             </Box>
+              <br />  <img width={400} src={preview} alt="" />
           </Box>
 
-
+          <InfiniteScroll
+                pageStart={0}
+                loadMore={getAllTweets}
+                hasMore={!eof}
+                loader={<div style={{ display: "flex", justifyContent: "center", alignItems: "baseline", minHeight: '100vh' }}>
+                <img width={780} src={Loader} alt=""  />
+              </div>}
+            >
 
 
 
@@ -383,9 +412,10 @@ function Profile() {
                 <CardMedia
                   component="img"
                   height="20%"
-                  image="https://images.pexels.com/photos/4534200/pexels-photo-4534200.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                  alt="Paella dish"
-                />
+                 
+                  
+                /><img src={eachTweet.imageUrl} alt="Tweet Image"  width= "100%"style={{ border: "1px solid white",
+                borderRadius: "25px"}} />
                 <CardContent>
                   <Typography variant="body2" color="text.secondary">
                   {eachTweet?.text}
@@ -456,6 +486,7 @@ function Profile() {
               </Card>
             ))}
           </Box>
+          </InfiniteScroll>
         </Box>
 
 

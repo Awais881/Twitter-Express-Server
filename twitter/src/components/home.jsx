@@ -35,7 +35,7 @@ function Tweets() {
   const [tweets, setTweets] = useState([]);
   const [tweetsText, setTweetsText] = useState([]);
   
-
+  const [preview, setPreview] = useState(null)
  
   const [toggleReload, setToggleReload] = useState(false);
   const [editingTweet, setEditingTweet] = useState({
@@ -126,40 +126,49 @@ function Tweets() {
 
   const saveTweet = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(`${state.baseUrl}/api/v1/tweet`,
+    let fileInput = document.getElementById("picture");
+    console.log("fileInput: ", fileInput.files[0]);
+    let formData = new FormData();
+  formData.append("myFile", fileInput.files[0])
+  formData.append("text", tweetsText)
+  console.log(formData.get("text"));
+  axios({
+    method: 'post',
+    url: `${state.baseUrl}/tweet`,
+    data: formData,
+    headers: { 'Content-Type': 'multipart/form-data' }
+})
+    .then(res => {
+      setToggleReload(!toggleReload);
+        console.log(`upload Success` + res.data);
+        toast.success('Added Sucessfully', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+    })
+    .catch(err => {
+        console.log("error: ", err);
+        toast.error("Can't Tweet", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+    })
+}
 
-       {
-        text: tweetsText
-      
-      });
-      setToggleReload(!toggleReload)
-      
-      toast.success('Added Sucessfully', {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    } catch (err) {
-      console.log("err", err);
-      toast.error('Failed', {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    }
-  };
-
+  
+ 
 
   const updateHandler = async (e) => {
     e.preventDefault();
@@ -434,15 +443,27 @@ function Tweets() {
                       variant="filled" />
                 
                     <Stack direction='row' gap={1} mt={2} mb={3}>
-                      <EmojiEmotions color='primary' />
-                      <Image color='secondary' />
+                     <input 
+                         id='picture'
+                         type="file"
+                         accept='image/*'
+                         onChange={(e) => {
+                           
+                           var url = URL.createObjectURL(e.currentTarget.files[0])
+                           
+                           console.log("url: ", url);
+                           
+                           setPreview(url)
+                           
+                          }} />
+                  
+                    <Image color='secondary' type="file" />
                       <VideoCameraBack color='success' />
                       <PersonAdd color='error' />
                     </Stack>
                     <ButtonGroup fullWidth
                       variant='contained'
                       aria-label='outlined primary button group'>
-
                       <Button type='submit' >Tweet</Button>
 
 
@@ -451,6 +472,7 @@ function Tweets() {
                 </div>
               </Box>
             </Box>
+                          <br />  <img width={400} src={preview} alt="" />
           </Box>
 
 
@@ -486,9 +508,11 @@ function Tweets() {
                 <CardMedia
                   component="img"
                   height="20%"
-                  image="https://images.pexels.com/photos/4534200/pexels-photo-4534200.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                  alt="Paella dish"
+                 
+                  // image = src={eachTweet.imageUrl}
                 />
+                <img src={eachTweet.imageUrl} alt=""  width= "100%"style={{ border: "1px solid white",
+                borderRadius: "25px"}}/>
                 <CardContent>
                   <Typography variant="body2" color="text.secondary">
                   {eachTweet?.text}
