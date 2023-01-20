@@ -140,7 +140,7 @@ function App() {
       {(state.isLogin === null) ?
 
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: '100vh' }}>
-          <img width={300} src={Loader} alt="" />
+          <img width={300} src={Loader} alt="loading" />
         </div>
 
         : null}
