@@ -8,7 +8,7 @@ import fs from 'fs';
 import jwt from 'jsonwebtoken';
 
 const storageConfig = multer.diskStorage({
-    destination: './uploads/',
+
     filename: function (req, file, cb) {
 
         console.log("mul-file: ", file);
